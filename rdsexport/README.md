@@ -34,3 +34,9 @@ inputs = {
   schedule_expression        = "cron(0 8 1 * ? *)"  # Run at 8:00 am (UTC) every 1st day of the month
 }
 ```
+
+
+## Reference
+
+- https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ExportSnapshot.html
+
