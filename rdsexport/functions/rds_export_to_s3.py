@@ -6,9 +6,10 @@
 
 import os
 import sys
+import json
 import boto3
 import logging
-from datetime import datetime, timezone, timedelta
+from datetime import date, datetime, timezone, timedelta
 from botocore.client import ClientError
 
 REGION = os.getenv("REGION")
@@ -80,12 +81,11 @@ def lambda_handler(event, context):
     s3_bucket  = os.getenv("S3_BUCKET")
     IamRoleArn = os.environ.get('IAM_ROLE_ARN')
     KmsKeyId = os.environ.get('KMS_KEY_ID')
-    today = (datetime.today()).date()
-    yesterday = today - timedelta(days=1)
+    last_day_of_prev_month = date.today().replace(day=1) - timedelta(days=1)
+    logger.info('Last day of prev month: {last_day_of_prev_month}'.format(last_day_of_prev_month=last_day_of_prev_month))
 
-    snapshot = _get_most_current_snapshot(db_identifier, yesterday)
-
+    snapshot = _get_most_current_snapshot(db_identifier, last_day_of_prev_month)
     if _create_bucket(s3_bucket):
-        response = instantiate_s3_export(snapshot, s3_bucket, IamRoleArn, KmsKeyId, yesterday)
+        response = instantiate_s3_export(snapshot, s3_bucket, IamRoleArn, KmsKeyId, last_day_of_prev_month)
         logger.info(json.dumps(response, default=jsonDateTimeConverter))
         logger.info('end:export_snapshots')

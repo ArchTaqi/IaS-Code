@@ -5,7 +5,7 @@ resource "aws_iam_role" "rds_export_to_s3_role" {
     "Version": "2012-10-17",
     "Statement": {
       "Effect": "Allow",
-      "Principal": {"Service": "lambda.amazonaws.com"},
+      "Principal": {"Service": ["lambda.amazonaws.com", "export.rds.amazonaws.com"]},
       "Action": "sts:AssumeRole"
     }
   })
